@@ -127,8 +127,6 @@ for screen smaller than 800px
 
 *Important note*: 800px is chosen arbitrarily.
 
----
-
 **Flexbox display**
 
 In the column containing the information regarding Twitch's streams, a display is concocted through flex containers and a simple design.
