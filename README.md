@@ -2,7 +2,9 @@
 
 Build a single purpose website in which it is possible to establish if someone is streaming on Twitch.
 
-Final results: // PEN TO BE UPDATED
+Feel free to check this [pen](https://codepen.io/borntofrappe/full/YeNzqQ/) to see the current progress.
+
+// BEWARE MISSING TECHNICAL IMPLEMENTATION, MEANING MISSING TWITCH INTEGRATION
 
 ---
 
@@ -20,9 +22,9 @@ Particularly fulfill the following user stories:
 - it is possible to search through the listed streams.
 
 Useful links:
-  - FreeCodeCamp [forum suggestions](https://forum.freecodecamp.org/t/freecodecamp-challenge-guide-how-to-use-the-twitchtv-api/19541) on the API call;
+  - FreeCodeCamp [workaround](https://wind-bow.glitch.me/) for the API call;
 
-  - [Gist](https://gist.github.com/QuincyLarson/2ff6892f948d0b7118a99264fd9c1ce8) for the data to be used in app
+  - Change in Twitch's [own API](https://blog.twitch.tv/client-id-required-for-kraken-api-calls-afbb8e95f843).
 
 
 ## First thoughts
@@ -254,4 +256,8 @@ Moreover, and through a media query, these icons are set to be visible only if t
 
 ## Technical Implemenation
 
-// TODO: HOW TO INJECT TWITCH INFORMATION IN THE DOCUMENT 
+The links provided by FreeCodeCamp prove to be vital for the project.
+
+As [hereby noted](https://blog.twitch.tv/client-id-required-for-kraken-api-calls-afbb8e95f843), the Twitch API was updated to require a key.
+
+FreeCodeCamp offers the opportunity to circumvent such a requirement through an alternative [objective URL](https://wind-bow.glitch.me/).
