@@ -260,56 +260,56 @@ The links provided by FreeCodeCamp prove to be vital for the project.
 
 As [hereby noted](https://blog.twitch.tv/client-id-required-for-kraken-api-calls-afbb8e95f843), the Twitch API was updated to require a key; in response to this change FreeCodeCamp generously offers the opportunity to circumvent such a requirement through an alternative [objective URL](https://wind-bow.glitch.me/).
 
-Following this "pass-through" it is advised to use an alternative base URL, in the form of `https://wind-bow.gomix.me/twitch-api`, and use this endpoint following Twitch's own documentation.
+Following this "pass-through" it is advised to use an alternative base URL, in the form of `https://wind-bow.gomix.me/twitch-api`, and use this as endpoint for the getJSON function.
 
-Documentation to get information from the following routes: 
+The URL, as per documentation, allows to retrieve information from the following routes: 
 
 . /users/:user
 - /channels/:channel
 - /stream/:stream
 
-Unfortunately the [referenced resource](https://github.com/justintv/Twitch-API) is deprecated in favor of [developer's documentation](https://dev.twitch.tv/docs) directly hosted on Twitch's site. This requires a few minutes of rummaging through the documentation to find the required information.
+FreeCodeCamp also provides an array of Twitch's accounts which are to be included in the single purpose application.
 
-In the product docs the most reasonable reference would be Twitch API v5, as this allows to get data about which streams are live. It would be, had it not been deprecated in favor of the [new Twitch API](https://dev.twitch.tv/docs/api).
+```js
+var accounts = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+```
 
-In its [reference section](https://dev.twitch.tv/docs/api/reference), the API provides valuable information on how to 1) [get streams](https://dev.twitch.tv/docs/api/reference#get-streams) and 2) [get users](https://dev.twitch.tv/docs/api/reference#get-users).
+By copy pasting the provided URl with the route of users/oneOfTheNames it is possible to analyze the response by the "pass-through" API.
 
-1. Get streams
+For this URL following address for instance: 
 
-  What it does:
+```
+https://wind-bow.glitch.me/twitch-api/users/freecodecamp, 
+```
+
+It is possible to consider the following response: 
+
+```
+{"display_name":"FreeCodeCamp","_id":79776140,"name":"freecodecamp","type":"user","bio":"We help you learn to code, then practice by building projects for nonprofits. Learn Full-stack JavaScript, build a portfolio, and get a coding job by joining our open source community at https://freecodecamp.com","created_at":"2015-01-14T03:36:47Z","updated_at":"2018-02-08T09:31:46Z","logo":"https://static-cdn.jtvnw.net/jtv_user_pictures/freecodecamp-profile_image-d9514f2df0962329-300x300.png","_links":{"self":"https://api.twitch.tv/kraken/users/freecodecamp"}}
+```
+
+In which an object contains all the relevant information required by the single purpose application.
+
+What is then necessary retrieve the information from the list of provided account and inject the results in the HTML document, much alike in the Wikipedia Viewer project prior to this one.
+
+Navigating the other available routes and considering the returning object it is possible to assess the following:
+
+- `users/:user` provides information on the Twitch account for `:user`. Relevant information comes under the following properties
+  - display_name
+  - logo
+  - \_links.self; which supposedly references the user account on Twitch, weren't Twitch requiring a client ID to realize the request.
   
-  > Gets information about active streams
-  
-  Output:
+- `channels/channel` provides descriptive information regarding the channel, including the following values
+   - url; forwarding to the Twitch account
+   - display_name
+   - logo
+   
 
-  > The response has a JSON payload with a data field containing an array of stream information elements and a pagination field containing information required to query for more streams
-  
-  Example call:
-
-  > GET https://api.twitch.tv/helix/streams
-
-
-2. Get users
-
-  What it does:
-
-  > Users are identified by optional user IDs and/or login name
-  
-  Output: 
-
-  > The response has a JSON payload with a data field containing an array of user-information elements
-  
-  Example call:
-
-  > GET https://api.twitch.tv/helix/users
-
-  Optional parameter:
-
-  > ìd; for the User ID
-
-  Example call
-
-  > https://api.twitch.tv/helix/users?id=44322889
-
- 
- 
+- `streams/:stream` provides information pertinent to an ongoing stream. 
+    If a stream is not under way, the following properties are relevant
+    - stream; which is set to null
+    - \_links; which provide forwarding information less useful than other links in the page, such as the link mentioned under the users/:user route
+    
+    If a stream is indeed happening, the information changes with additional details regarding the stream itself.
+    - // TODO ADD INFORMATION
+    
