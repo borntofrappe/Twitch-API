@@ -2,7 +2,9 @@
 
 Build a single purpose website in which it is possible to establish if someone is streaming on Twitch.
 
-Final results: // PEN TO BE UPDATED
+Feel free to check this [pen](https://codepen.io/borntofrappe/full/YeNzqQ/) to see the current progress.
+
+// CURRENTLY ADDING TECHNICAL IMPLEMENTATION
 
 ---
 
@@ -20,9 +22,9 @@ Particularly fulfill the following user stories:
 - it is possible to search through the listed streams.
 
 Useful links:
-  - FreeCodeCamp [forum suggestions](https://forum.freecodecamp.org/t/freecodecamp-challenge-guide-how-to-use-the-twitchtv-api/19541) on the API call;
+  - FreeCodeCamp [workaround](https://wind-bow.glitch.me/) for the API call;
 
-  - [Gist](https://gist.github.com/QuincyLarson/2ff6892f948d0b7118a99264fd9c1ce8) for the data to be used in app
+  - Change in Twitch's [own API](https://blog.twitch.tv/client-id-required-for-kraken-api-calls-afbb8e95f843).
 
 
 ## First thoughts
@@ -254,4 +256,171 @@ Moreover, and through a media query, these icons are set to be visible only if t
 
 ## Technical Implemenation
 
-// TODO: HOW TO INJECT TWITCH INFORMATION IN THE DOCUMENT 
+The links provided by FreeCodeCamp prove to be vital for the project.
+
+As [hereby noted](https://blog.twitch.tv/client-id-required-for-kraken-api-calls-afbb8e95f843), the Twitch API was updated to require a key; in response to this change FreeCodeCamp generously offers the opportunity to circumvent such a requirement through an alternative [objective URL](https://wind-bow.glitch.me/).
+
+Following this "pass-through" it is advised to use an alternative base URL, in the form of `https://wind-bow.gomix.me/twitch-api`, and use this as endpoint for the getJSON function.
+
+The URL, as per documentation, allows to retrieve information from the following routes: 
+
+- /users/:user
+- /channels/:channel
+- /stream/:stream
+
+FreeCodeCamp also provides an array of Twitch's accounts which are to be included in the single purpose application.
+
+```js
+var accounts = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+```
+
+By copy pasting the provided URl with the route of users/oneOfTheNames it is possible to analyze the response by the "pass-through" API.
+
+For this URL following address for instance: 
+
+```
+https://wind-bow.glitch.me/twitch-api/users/freecodecamp, 
+```
+
+It is possible to consider the following response: 
+
+```
+{"display_name":"FreeCodeCamp","_id":79776140,"name":"freecodecamp","type":"user","bio":"We help you learn to code, then practice by building projects for nonprofits. Learn Full-stack JavaScript, build a portfolio, and get a coding job by joining our open source community at https://freecodecamp.com","created_at":"2015-01-14T03:36:47Z","updated_at":"2018-02-08T09:31:46Z","logo":"https://static-cdn.jtvnw.net/jtv_user_pictures/freecodecamp-profile_image-d9514f2df0962329-300x300.png","_links":{"self":"https://api.twitch.tv/kraken/users/freecodecamp"}}
+```
+
+In which an object contains the relevant information required by the single purpose application.
+
+What is then necessary is to 1) retrieve the information from the list of provided accounts and 2) and inject the results in the HTML document, much alike in the Wikipedia Viewer project materialized prior to this one.
+
+Navigating the other available routes and considering the returning object it is possible to assess the following:
+
+- `users/:user` provides information on the Twitch account for `:user`. 
+
+  Relevant information comes under the following properties:
+  - display_name;
+  - logo;
+  - \_links.self; (forwarding to the user account on Twitch, supposedly).
+  
+- `channels/channel` provides descriptive information regarding the channel.
+
+  It includes the following potentially useful values
+  - status;
+  - display_name;
+  - logo;
+  - url (forwarding to the Twitch account of twitch.tv/oneOfTheNames).
+   
+- `streams/:stream` provides descriptive information pertinent to an ongoing stream. 
+
+  If a stream is not under way, the following properties are relevant
+  - stream (which is set to null);
+  - \_links (forwarding to the account much alike the route `users/:user` allows).
+
+  If a stream is indeed happening, the information changes with additional details regarding the stream itself.
+  - stream.viewers;
+  - stream.type;
+  - stream.preview.small
+  - channel.status;
+  - channel.display_name;
+  - channel.logo;
+  - \_links.self.
+    
+Information is often redundant among the possible routes. Moreover, forwarding links found under the properties of `_link.self` returns the following message.
+
+```
+{"error":"Bad Request","status":400,"message":"No client id specified"}
+```
+
+This leads to a simplistic choice to first use the single route of `channels/:channel`, as to retrieve the display status, name, logo and a functioning reference. 
+
+When implemented, the solution would ultimately provide references to Twitch channels, without actually signaling whether a channel is streaming or not. This information is retrieve-able in the route of `streams/:stream`, potentially to be added later.
+
+In its simplest form, it is possible to use jQuery to visualize the json object returned with the following statement:
+
+```js
+var url = "https://wind-bow.glitch.me/twitch-api/channels/freecodecamp";
+
+$.getJSON(url, function(json) {
+  console.log(json);
+});
+```
+
+This statement outputs in the developer console the object with several of the required properties, for the channel of FreeCodeCamp.
+
+In order to ponder a JSON object for every result a for loop is implemented to loop through the array of accounts, concatenate each account's name to the URL and output the object connected to this newly minted objective URL.
+
+```JS
+var accounts = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+var basisURL = "https://wind-bow.glitch.me/twitch-api/channels/";
+
+for(var i=0; i<accounts.length;i++) {
+  var objectiveURL = basisURL + accounts[i];
+  $.getJSON(objectiveURL, function(json) {
+    console.log(json);
+  });
+}
+```
+
+Which returns an object for each account. Instead of simply displaying the object, the next step is to store useful values and to inject them in the unordered list provided in the HTML.
+
+Unordered list which is planned to be structured as follows:
+
+```HTML
+<ul class="vertical-list-of-streams">
+  <li>
+    <!--  
+    section containing a link-able image
+    -->
+    <p>
+      <a href="{link forwarding to the account}">
+        <img src="{account logo}" title="{account name}">
+      </a>
+    </p>
+
+    <!--  
+    section containing the information included by the account in its status
+    -->
+    <p>
+      {account status}
+    </p>
+
+    <!--  
+    section containing the status of the streamer
+    set to a default value of live
+    -->
+    <p>
+      LIVE
+    </p>
+  </li>
+</ul>
+```
+
+jQuery is therefore used to append a list item, one for each account, detailing the described structure. Moreover, jQuery is used to include the values mentioned in between {curly braces} with the actual values found in the JSON objects.
+
+The function in the for loop looks as follows:
+
+```
+$(".vertical-list-of-streams")
+      .append(
+        "<li><p><a href="
+        +
+        json.url
+        +
+        "><img src="
+        +
+        json.logo
+        +"></a></p><p>"
+        +
+        json.status.substr(0,40)
+        +
+        "</p><p>LIVE</p></li>"
+      );
+```
+
+*Please note*: two additional steps can be included to complete the usefulness of the page
+
+1. the description provided by each account in its status should be link-able if a stream is currently ongoing
+2. the status of the streamer should be live or offline depending on actual activity.
+
+That being said, the project so far starts to resemble the finished product.
+
+// TODO: complete small increments described in the last ordered list and MOSTLY INCLUDE POSSIBILITY TO SHOW ONLINE/ALL ACCOUNTS
