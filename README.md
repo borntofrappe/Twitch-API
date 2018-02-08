@@ -272,52 +272,44 @@ Unfortunately the [referenced resource](https://github.com/justintv/Twitch-API) 
 
 In the product docs the most reasonable reference would be Twitch API v5, as this allows to get data about which streams are live. It would be, had it not been deprecated in favor of the [new Twitch API](https://dev.twitch.tv/docs/api).
 
-In its [reference](https://dev.twitch.tv/docs/api/reference), the API provides valuable information on how to 1) [get streams](https://dev.twitch.tv/docs/api/reference#get-streams) and 2) [get users](https://dev.twitch.tv/docs/api/reference#get-users).
+In its [reference section](https://dev.twitch.tv/docs/api/reference), the API provides valuable information on how to 1) [get streams](https://dev.twitch.tv/docs/api/reference#get-streams) and 2) [get users](https://dev.twitch.tv/docs/api/reference#get-users).
 
 1. Get streams
 
-> Gets information about active streams
+  What it does:
+  
+  > Gets information about active streams
+  
+  Output:
 
-> The response has a JSON payload with a data field containing an array of stream information elements and a pagination field containing information required to query for more streams
+  > The response has a JSON payload with a data field containing an array of stream information elements and a pagination field containing information required to query for more streams
+  
+  Example call:
 
-> GET https://api.twitch.tv/helix/streams
-
-
+  > GET https://api.twitch.tv/helix/streams
 
 
 2. Get users
 
-> Users are identified by optional user IDs and/or login name
+  What it does:
 
-> The response has a JSON payload with a data field containing an array of user-information elements.
+  > Users are identified by optional user IDs and/or login name
+  
+  Output: 
 
-> GET https://api.twitch.tv/helix/users
+  > The response has a JSON payload with a data field containing an array of user-information elements
+  
+  Example call:
 
-Optional parameter:
+  > GET https://api.twitch.tv/helix/users
 
-> ìd; for the User ID
+  Optional parameter:
 
-Example call
+  > ìd; for the User ID
 
-> https://api.twitch.tv/helix/users?id=44322889
+  Example call
 
-Example response 
+  > https://api.twitch.tv/helix/users?id=44322889
 
- {"data":[{
-   "id":"44322889",
-   "login":"dallas",
-   "display_name":"dallas",
-   "type":"staff",
-   "broadcaster_type":"",
-   "description":"Just a gamer playing games and chatting. :)",
-   "profile_image_url":"https://static-cdn.jtvnw.net/jtv_user_pictures/dallas-profile_image-1a2c906ee2c35f12-300x300.png",
-   "offline_image_url":"https://static-cdn.jtvnw.net/jtv_user_pictures/dallas-channel_offline_image-1a2c906ee2c35f12-1920x1080.png",
-   "view_count":191836881,
-   "email":"login@provider.com"
-}]}
-
-Useful fields: 
-
-- display_name; 
-- profile_image;
-
+ 
+ 
