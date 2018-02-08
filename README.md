@@ -264,7 +264,7 @@ Following this "pass-through" it is advised to use an alternative base URL, in t
 
 The URL, as per documentation, allows to retrieve information from the following routes: 
 
-. /users/:user
+- /users/:user
 - /channels/:channel
 - /stream/:stream
 
@@ -288,28 +288,48 @@ It is possible to consider the following response:
 {"display_name":"FreeCodeCamp","_id":79776140,"name":"freecodecamp","type":"user","bio":"We help you learn to code, then practice by building projects for nonprofits. Learn Full-stack JavaScript, build a portfolio, and get a coding job by joining our open source community at https://freecodecamp.com","created_at":"2015-01-14T03:36:47Z","updated_at":"2018-02-08T09:31:46Z","logo":"https://static-cdn.jtvnw.net/jtv_user_pictures/freecodecamp-profile_image-d9514f2df0962329-300x300.png","_links":{"self":"https://api.twitch.tv/kraken/users/freecodecamp"}}
 ```
 
-In which an object contains all the relevant information required by the single purpose application.
+In which an object contains the relevant information required by the single purpose application.
 
-What is then necessary retrieve the information from the list of provided account and inject the results in the HTML document, much alike in the Wikipedia Viewer project prior to this one.
+What is then necessary is to 1) retrieve the information from the list of provided accounts and 2) and inject the results in the HTML document, much alike in the Wikipedia Viewer project materialized prior to this one.
 
 Navigating the other available routes and considering the returning object it is possible to assess the following:
 
-- `users/:user` provides information on the Twitch account for `:user`. Relevant information comes under the following properties
-  - display_name
-  - logo
-  - \_links.self; which supposedly references the user account on Twitch, weren't Twitch requiring a client ID to realize the request.
-  
-- `channels/channel` provides descriptive information regarding the channel, including the following values
-   - url; forwarding to the Twitch account
-   - display_name
-   - logo
-   
+- `users/:user` provides information on the Twitch account for `:user`. 
 
-- `streams/:stream` provides information pertinent to an ongoing stream. 
-    If a stream is not under way, the following properties are relevant
-    - stream; which is set to null
-    - \_links; which provide forwarding information less useful than other links in the page, such as the link mentioned under the users/:user route
+  Relevant information comes under the following properties:
+  - display_name;
+  - logo;
+  - \_links.self; (forwarding to the user account on Twitch, supposedly).
+  
+- `channels/channel` provides descriptive information regarding the channel.
+
+  It includes the following potentially useful values
+  - status;
+  - display_name;
+  - logo;
+  - url (forwarding to the Twitch account of twitch.tv/oneOfTheNames).
+   
+- `streams/:stream` provides descriptive information pertinent to an ongoing stream. 
+
+  If a stream is not under way, the following properties are relevant
+  - stream (which is set to null);
+  - \_links (forwarding to the account much alike the route `users/:user` allows).
+
+  If a stream is indeed happening, the information changes with additional details regarding the stream itself.
+  - stream.viewers;
+  - stream.type;
+  - stream.preview.small
+  - channel.status;
+  - channel.display_name;
+  - channel.logo;
+  - \_links.self.
     
-    If a stream is indeed happening, the information changes with additional details regarding the stream itself.
-    - // TODO ADD INFORMATION
-    
+Information is often redundant among the possible routes. Moreover, forwarding links found under the properties of `_link.self` returns the following message.
+
+```
+{"error":"Bad Request","status":400,"message":"No client id specified"}
+```
+
+This leads to a simplistic choice to first use the single route of `channels/:channel`, as to retrieve the display status, name, logo and a functioning reference. 
+
+When implemented, the solution would ultimately provide references to Twitch channels, without actually signaling whether a channel is streaming or not. This information is retrieve-able in the route of `streams/:stream`, potentially to be added later.
