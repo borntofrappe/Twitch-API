@@ -258,6 +258,66 @@ Moreover, and through a media query, these icons are set to be visible only if t
 
 The links provided by FreeCodeCamp prove to be vital for the project.
 
-As [hereby noted](https://blog.twitch.tv/client-id-required-for-kraken-api-calls-afbb8e95f843), the Twitch API was updated to require a key.
+As [hereby noted](https://blog.twitch.tv/client-id-required-for-kraken-api-calls-afbb8e95f843), the Twitch API was updated to require a key; in response to this change FreeCodeCamp generously offers the opportunity to circumvent such a requirement through an alternative [objective URL](https://wind-bow.glitch.me/).
 
-FreeCodeCamp offers the opportunity to circumvent such a requirement through an alternative [objective URL](https://wind-bow.glitch.me/).
+Following this "pass-through" it is advised to use an alternative base URL, in the form of `https://wind-bow.gomix.me/twitch-api`, and use this endpoint following Twitch's own documentation.
+
+Documentation to get information from the following routes: 
+
+. /users/:user
+- /channels/:channel
+- /stream/:stream
+
+Unfortunately the [referenced resource](https://github.com/justintv/Twitch-API) is deprecated in favor of [developer's documentation](https://dev.twitch.tv/docs) directly hosted on Twitch's site. This requires a few minutes of rummaging through the documentation to find the required information.
+
+In the product docs the most reasonable reference would be Twitch API v5, as this allows to get data about which streams are live. It would be, had it not been deprecated in favor of the [new Twitch API](https://dev.twitch.tv/docs/api).
+
+In its [reference](https://dev.twitch.tv/docs/api/reference), the API provides valuable information on how to 1) [get streams](https://dev.twitch.tv/docs/api/reference#get-streams) and 2) [get users](https://dev.twitch.tv/docs/api/reference#get-users).
+
+1. Get streams
+
+> Gets information about active streams
+
+> The response has a JSON payload with a data field containing an array of stream information elements and a pagination field containing information required to query for more streams
+
+> GET https://api.twitch.tv/helix/streams
+
+
+
+
+2. Get users
+
+> Users are identified by optional user IDs and/or login name
+
+> The response has a JSON payload with a data field containing an array of user-information elements.
+
+> GET https://api.twitch.tv/helix/users
+
+Optional parameter:
+
+> ìd; for the User ID
+
+Example call
+
+> https://api.twitch.tv/helix/users?id=44322889
+
+Example response 
+
+ {"data":[{
+   "id":"44322889",
+   "login":"dallas",
+   "display_name":"dallas",
+   "type":"staff",
+   "broadcaster_type":"",
+   "description":"Just a gamer playing games and chatting. :)",
+   "profile_image_url":"https://static-cdn.jtvnw.net/jtv_user_pictures/dallas-profile_image-1a2c906ee2c35f12-300x300.png",
+   "offline_image_url":"https://static-cdn.jtvnw.net/jtv_user_pictures/dallas-channel_offline_image-1a2c906ee2c35f12-1920x1080.png",
+   "view_count":191836881,
+   "email":"login@provider.com"
+}]}
+
+Useful fields: 
+
+- display_name; 
+- profile_image;
+
