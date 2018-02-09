@@ -4,8 +4,6 @@ Build a single purpose website in which it is possible to establish if someone i
 
 Feel free to check this [pen](https://codepen.io/borntofrappe/full/YeNzqQ/) to see the current progress.
 
-// CURRENTLY ADDING TECHNICAL IMPLEMENTATION
-
 ---
 
 # Building the Single Purpose Application
@@ -561,3 +559,40 @@ The final functionality missing from the page is the ability to show streamers d
 
 This functionality is combined with the horizontal submenu containing the "Online" and "All" labels respectively. By responding on a click event on each label, the vertical list of streamers needs to show respectively only live accounts or all accounts.
 
+```JS
+$(".horizontal-submenu .online").on("click", function() {
+      // show only live accounts
+      
+  });
+
+  $(".horizontal-submenu .all").on("click", function() {
+      // show all accounts
+      
+  });
+```
+
+In order to hide and show list items it is possible to leverage the jQuery function of `.slideUp`, which removes list items in an upward motion, and `.slideDown`, which adds them back in a downward fashion.
+
+```JS
+$(".horizontal-submenu .online").on("click", function() {
+      // show only live accounts
+      $(".vertical-list-of-streams li").slideUp();
+      
+  });
+
+  $(".horizontal-submenu .all").on("click", function() {
+      // show all accounts
+      $(".vertical-list-of-streams li").slideDown();      
+  });
+```
+
+To hide only those list items which are required to disappear upon clicking on the first label, it is possible to use the selector `:contains`, directly available from jQuery. With this it is possible to target only the list items which contain a defined string and hide those which contain, for instance, the string "Off".
+
+```
+$(".horizontal-submenu .online").on("click", function() {
+      // slideUp only those list items which do not contain the text "Live"
+      $(".vertical-list-of-streams li:contains('Off')").slideUp();
+});
+```
+
+Which ultimately terminates the functionality the page is supposed to solve. 
