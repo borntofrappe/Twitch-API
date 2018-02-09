@@ -420,7 +420,7 @@ $(".vertical-list-of-streams")
       );
 ```
 
-**Live Feed**
+**Online or All**
 
 Additional information is required to complete the usefulness of the page. Information such as the status of an ongoing stream displayed in place of the status of the account, and information detailing if a streamer is actually live. 
 
@@ -480,11 +480,11 @@ Instead of:
 The following is used:
 
 ```
-<p>"
+"<p>"
   +
   isStreamLive
   +
-"</p>
+"</p>"
 ```
 
 **Wrap-up**
