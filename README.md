@@ -256,6 +256,8 @@ Moreover, and through a media query, these icons are set to be visible only if t
 
 ## Technical Implemenation
 
+**First Thoughts**
+
 The links provided by FreeCodeCamp prove to be vital for the project.
 
 As [hereby noted](https://blog.twitch.tv/client-id-required-for-kraken-api-calls-afbb8e95f843), the Twitch API was updated to require a key; in response to this change FreeCodeCamp generously offers the opportunity to circumvent such a requirement through an alternative [objective URL](https://wind-bow.glitch.me/).
@@ -292,7 +294,9 @@ In which an object contains the relevant information required by the single purp
 
 What is then necessary is to 1) retrieve the information from the list of provided accounts and 2) and inject the results in the HTML document, much alike in the Wikipedia Viewer project materialized prior to this one.
 
-Navigating the other available routes and considering the returning object it is possible to assess the following:
+**JSON Objects**
+
+Navigating all available routes and considering the returning object it is possible to assess the following:
 
 - `users/:user` provides information on the Twitch account for `:user`. 
 
@@ -333,6 +337,8 @@ Information is often redundant among the possible routes. Moreover, forwarding l
 This leads to a simplistic choice to first use the single route of `channels/:channel`, as to retrieve the display status, name, logo and a functioning reference. 
 
 When implemented, the solution would ultimately provide references to Twitch channels, without actually signaling whether a channel is streaming or not. This information is retrieve-able in the route of `streams/:stream`, potentially to be added later.
+
+**jQuery to HTML**
 
 In its simplest form, it is possible to use jQuery to visualize the json object returned with the following statement:
 
@@ -416,11 +422,142 @@ $(".vertical-list-of-streams")
       );
 ```
 
-*Please note*: two additional steps can be included to complete the usefulness of the page
+**Live Feed**
 
-1. the description provided by each account in its status should be link-able if a stream is currently ongoing
-2. the status of the streamer should be live or offline depending on actual activity.
+Additional information is required to complete the usefulness of the page. Information such as the status of an ongoing stream displayed in place of the status of the account, and information detailing if a streamer is actually live. 
 
-That being said, the project so far starts to resemble the finished product.
+These tidbits of information can be discerned by considering the `stream` property found in the `streams/:stream` route.
 
-// TODO: complete small increments described in the last ordered list and MOSTLY INCLUDE POSSIBILITY TO SHOW ONLINE/ALL ACCOUNTS
+- if stream is set to `null`, there is no ongoing stream;
+- otherwise, there exist additional properties which surmise the presence of a live feed. In this case, the status found under the property of channel refers directly to the ongoing stream.
+
+The only property to be analyzed is therefore the property of `stream`.
+
+To also consider the route of `streams/:stream` it is possible to include, always inside the foor loop, another getJSON request for the particular path.
+
+```JS
+var accounts = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+var basisURLStream = "https://wind-bow.glitch.me/twitch-api/streams/";
+
+
+for(var i=0; i<accounts.length;i++) {
+  var objectiveURLStream = basisURLStream + accounts[i];
+  $.getJSON(objectiveURLStream, function(json) {
+  
+  
+  });
+```
+
+Inside this request branches are introduced through if/else statements to consider the presence of a null property and adjust accordingly.
+
+The approach used in the script is to:
+
+1. declare a variable outside of the scope of the for loop, directly following prior variables declarations
+
+```
+var isStreamLive;
+```
+
+2. Inside of the for loop, nested inside the getJSON request, store in this variable the hardcoded string of Live if the JSON object returns a stream property different than `null`
+
+```JS
+if(json.stream !== null) {
+      isStreamLive = "Live";
+    }
+else {
+  isStreamLive = "Off";
+}
+```
+
+3. Always inside the for loop, but instead nested inside the other getJSON request, use this variable instead of the hard-coded default value.
+
+Instead of:
+
+```
+<p>
+  LIVE
+</p>
+```
+
+The following is used:
+
+```
+<p>"
+  +
+  isStreamLive
+  +
+"</p>
+```
+
+**Wrap-up**
+
+Considering together all prior efforts, and improving readabillity by introducing variables for all necessary properties, the JS code looks as follows:
+
+
+```JS
+var accounts = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+var basisURL = "https://wind-bow.glitch.me/twitch-api/channels/";
+var basisURLStream = "https://wind-bow.glitch.me/twitch-api/streams/";
+var isStreamLive;
+
+for(var i=0; i<accounts.length;i++) {
+  var objectiveURLStream = basisURLStream + accounts[i];
+  $.getJSON(objectiveURLStream, function(json) {
+    if(json.stream !== null) {
+      isStreamLive = "Live";
+    }
+    else {
+      isStreamLive = "Off";
+    }
+  });
+
+  var objectiveURL = basisURL + accounts[i];
+  $.getJSON(objectiveURL, function(json) {
+    console.log(json);
+
+    var accountURL = json.url;
+    var logoURL = json.logo;
+    var accountStatus;
+    if(json.status === null) {
+      accountStatus = "Status Unknown";
+    }
+    else if (json.status.length > 35){
+      accountStatus = json.status.substr(0,32) + "...";
+    }
+    else {
+      accountStatus = json.status;
+    }
+
+
+    $(".vertical-list-of-streams")
+      .append(
+        "<li><p><a href="
+        +
+        accountURL
+        +
+        "><img src="
+        +
+        logoURL
+        +"></a></p><p>"
+        +
+        accountStatus
+        +
+        "</p><p>"
+        +
+        isStreamLive
+        +
+        "</p></li>"
+      );
+
+  });
+}
+```
+
+Which admittedly looks cumbersome, but it's not difficult to understand. 
+
+**Online checkup**
+
+The final functionality missing from the page is the ability to show streamers depending on their status. The possibility to toggle between online and all users.
+
+This functionality is combined with the horizontal submenu containing the "Online" and "All" labels respectively. By responding on a click event on each label, the vertical list of streamers needs to show respectively only live accounts or all accounts.
+
