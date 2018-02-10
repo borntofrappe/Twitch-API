@@ -2,17 +2,30 @@
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
 /*
-set box-sizing to border-box to avoid mishaps when computing/referencing sizes
-reset margin and padding for all elements
+- set box-sizing to border-box to avoid mishaps when computing/referencing sizes
+- reset margin and padding for all elements
 */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+/*
+for the html root element
+- increase default size set by the browser by a small amount
+*/
 html {
   font-size: 1.1rem;
 }
+/*
+for the html root element
+- width considering the entirety of the available space
+- font family to the imported font
+- color to a default value
+- background image for a gradient as background, using the colors of Twitch
+- overflow-x to avoid minor nuisance with the display in the right column, which is moved left and right a tad too much
+
+*/
 body {
   width: 100%;
   font-family: 'Lato', sans-serif;
@@ -25,7 +38,8 @@ body {
 }
 /*
 for the container of all content
-  - width and height encompassing the space made available by the HTML body
+  - width encompassing the space made available by the HTML body
+  - height to be at least as hight as the available viewport
   - display grid to leverage CSS grid
   - grid template columns to create a layout which specifies two columns;
     two columns each covering a fraction of the page (hence half)
@@ -39,7 +53,11 @@ for the container of all content
 /*
 for the purely aesthetical container shown on large screens
   - grid to span the container for one column, the first of the defined two
-  - background-color just to test the layout visually
+  - text align to center the header
+  - padding to distance the header from its border
+  - text transform to literally uppercase the text
+  - min height to more than the available viewport, in order to already establish a vertical scrollbar for the page;
+    otherwise the display on the right column may cause some jittering animation when going from tall to smaller
 */
 .larger-screen-container {
   grid-column: 1/2;
@@ -48,13 +66,25 @@ for the purely aesthetical container shown on large screens
   text-transform: uppercase;
   min-height: 105vh;
 }
+/*
+for header in the left column
+- increase size on the basis of the browser's default size and the viewport width
+- increase letter spacing for readability
+- font family to the imported font
+- text shadow to form a green-ish shadow to the right and to the bottom, without blur
+*/
 .larger-screen-container h1 {
   font-size: calc(2.3rem + 1vw);
-  z-index: 2;
   letter-spacing: 10px;
   font-family: 'Lato', sans-serif;
   text-shadow: 3px 3px 0 #10CC72;
 }
+/*
+for the div encompassing the svg icons
+- position absolute as to position the division to the bottom left of the screen
+- transform to slightly rotate the block element 
+- transition to make the div disappear (when the screen is too thin/short) with ease
+*/
 .larger-screen-container .svg-icons {
   position: absolute;
   bottom: 2rem;
@@ -62,29 +92,37 @@ for the purely aesthetical container shown on large screens
   transform: rotate(5deg);
   transition: all 0.3s ease-out;
 }
+/*
+for the svg icons themselves
+- fill to white as to match the header
+- margin to slightly distance from the surrounding elements
+*/
 .larger-screen-container svg {
   fill: #fff;
   width: calc(80px + 2vw);
   margin: 1rem;
-  z-index: 0;
 }
-.larger-screen-container svg:nth-child(1) {
+
+/*
+for the svg icons, respectively for the 1st/3rd and the 2nd
+- rotate icons with alternate pattern
+*/
+.larger-screen-container svg:nth-child(odd) {
   transform: rotate(20deg);
 }
-.larger-screen-container svg:nth-child(2) {
+.larger-screen-container svg:nth-child(even) {
   transform: rotate(-20deg);
 }
-.larger-screen-container svg:nth-child(3) {
-  transform: rotate(20deg);
-}
+
+
 
 /*
 for the container of the information to be retrieved through API request
   - grid to span the container for one column, the second of the defined two
-  - background-color just to test the layout visually
 
   - display flex to make the column a flex container
   - justify-content and align-items to align the content in the row and in the column
+  - vertical padding to distance from the top and bottom borders
 */
 .information-container {
   grid-column: 2/3;
@@ -100,36 +138,86 @@ for the unordered lists in the information container
 .information-container ul {
   list-style: none;
 }
+/*
+for the display nested in the right column
+- display flex to make the div a flex container 
+- flex direction to change the default row value to column, showing flex items vertically
+- padding for aesthetics
+- text align to center contents
+- background color to wrap content in a consistent container
+- font size to increase defaul
+- border to set a double, white border around the container
+*/
 .information-display {
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
   text-align: center;
   background-color: rgba(255,255,255,0.2);
-  font-size: 22;
+  font-size: 1.4rem;
   border: 15px double #fff;
 }
+/*
+for the header in the right column
+- set to uppercase
+- increase default size 
+- set text shadow of the green-ish color, but to the left and to the bottom
+*/
 .information-display .header-display {
   text-transform: uppercase;
   font-size: calc(2.2rem + 0.5vw);
   text-shadow: -2px 2px 0 #10CC72;
 }
+/*
+for the horizontal submenu div
+- display flex to make the div a flex container
+- margin to distance it from the surrounding elements
+*/
 .information-display .horizontal-submenu {
   display: flex;
   margin-bottom: 1rem;
 }
+/*
+for the flex items of the horizontal submenu
+- flex grow to 1 to occupy available space
+- cursor pointer to make it evidently click-able
+- position relative to move the pseudo-elements freely with relation to the list items
+- z index, paired with z index of the pseudo element as to position the list items atop their respective pseudo companions
+- transition to ease change in color
+- transition delay to incur in the transition slightly after the pseudo element has started transitioning 
+
+- stylistic choices
+*/
 .information-display .horizontal-submenu li {
   flex-grow: 1;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease-out;
+  transition-delay: 0.2s;
+  
   text-transform: capitalize;
   margin: 0.5rem;
   font-size: 1.5rem;
-  cursor: pointer;
   background-color: rgba(255,255,255,0.2);
-  position: relative;
-  z-index: 2;
-  transition: all 0.3s ease-out;
-  transition-delay: 0.2s;
 }
+/*
+for the flex items of the horizontal submenu, on hover
+- change color to the dark purple chosen as one end of the linear gradient used as background
+*/
+.information-display .horizontal-submenu li:hover {
+  color: #473277;
+}
+
+/*
+for the pseudo element attached to each list item
+- content to empty string (required)
+- position absolute to move each pseudo element freely to the top right of each list item
+- width and height to create a small box
+- background color to make it stand out in comparison to the background
+- z index to position the pseudo element below the list items (list items should be click-able, not the pseudo element)
+- transition to ease change in width and height
+*/
 .information-display .horizontal-submenu li:before {
   content: "";
   position: absolute;
@@ -141,28 +229,51 @@ for the unordered lists in the information container
   z-index: -1;
   transition: all 0.3s ease-out;
 }
+/*
+for the pseudo element, when hovering on the list item
+- change width and height to encompass the entirety of the list item
+*/
 .information-display .horizontal-submenu li:hover:before {
   width: 100%;
   height: 100%;
 }
-.information-display .horizontal-submenu li:hover {
-  color: #473277;
-}
+
+/*
+for the list items in the vertical container detailing Twitch's accounts
+  - display flex to make it a flex container
+  - align-items to align flex items in the cross axis (in the column, as the main axis is set to row by the default value of flex-direction)
+  - stylistic choices
+*/
 .information-display .vertical-list-of-streams li {
   display: flex;
   align-items: center;
   margin: 0.3rem;
 }
-.information-display .vertical-list-of-streams li p img {
+/*
+for the image displaying the logo of each Twitch's account
+  - size of a reasonable icon
+  - border radius to make it round
+  - transition for a hovering state
+*/
+.information-display .vertical-list-of-streams li p img {  
   width: 54px;
   height: auto;
   border-radius: 50%;
   opacity: 0.5;
   transition: opacity 0.3s ease-out;
 }
+/*
+for the image displaying the logo of each Twitch's account, on hover
+  - increase opacity
+*/
 .information-display .vertical-list-of-streams li p img:hover {
   opacity: 0.67;
 }
+/*
+for the paragraph containing information on the status of each Twitch's account 
+  - flex grow to occupy available space
+  - stylistic choices
+*/
 .information-display .vertical-list-of-streams li p:nth-child(2){
   flex-grow: 1;
   margin: 0.5rem;
@@ -170,16 +281,19 @@ for the unordered lists in the information container
   font-size: 1.1rem;
 }
 
+
+/*
+for the animation applied in jQuery depending on live status
+  - enact the declared animation lasting 0.6 seconds, seven times, with easing and alternating from 0 to 100%, from 100% to 0 and so forth
+  - and retaining the properties of the last keyframe (100%)
+*/
 .streaming-live{
   animation: streaming-live 0.6s 7 ease-out alternate forwards;
 }
-
-.information-display .vertical-list-of-streams li p a{
-  text-decoration: none;
-  color: inherit;
-}
-
-
+/*
+details of the animation
+  - flicker from white to a green-ish color
+*/
 @keyframes streaming-live {
   0% {
     color: rgba(255,255,255,1);
@@ -191,7 +305,7 @@ for the unordered lists in the information container
 
 
 /*
-for screen smaller than 800px
+for screen thinner than 800px
 */
 @media only screen and (max-width: 800px) {
   /*
@@ -204,14 +318,21 @@ for screen smaller than 800px
   /*
   for the useful container
     - grid to span the container for two columns,
-    covering the entirety of the viewport
+      covering the entirety of the viewport
   */
   .information-container {
     grid-column: 1/3;
   }
 }
 
+/*
+for screen shorten than 480px
+*/
 @media only screen and (max-height: 480px) {
+  /*
+  for the svg icons container
+    - opacity to 0 (transitioned as per transition property used in the CSS of the container)
+  */
   .svg-icons {
     opacity: 0;
   }
