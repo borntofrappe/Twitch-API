@@ -1,0 +1,218 @@
+/* import font from google */
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+/*
+set box-sizing to border-box to avoid mishaps when computing/referencing sizes
+reset margin and padding for all elements
+*/
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-size: 1.1rem;
+}
+body {
+  width: 100%;
+  font-family: 'Lato', sans-serif;
+  color: #fff;
+  background-image: linear-gradient(
+    to right,
+    #473277, #4B357D
+    );
+  overflow-x: hidden;
+}
+/*
+for the container of all content
+  - width and height encompassing the space made available by the HTML body
+  - display grid to leverage CSS grid
+  - grid template columns to create a layout which specifies two columns;
+    two columns each covering a fraction of the page (hence half)
+*/
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: "1fr 1fr";
+}
+/*
+for the purely aesthetical container shown on large screens
+  - grid to span the container for one column, the first of the defined two
+  - background-color just to test the layout visually
+*/
+.larger-screen-container {
+  grid-column: 1/2;
+  text-align: center;
+  padding-top: 4rem;
+  text-transform: uppercase;
+  min-height: 105vh;
+}
+.larger-screen-container h1 {
+  font-size: calc(2.3rem + 1vw);
+  z-index: 2;
+  letter-spacing: 10px;
+  font-family: 'Lato', sans-serif;
+  text-shadow: 3px 3px 0 #10CC72;
+}
+.larger-screen-container .svg-icons {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  transform: rotate(5deg);
+  transition: all 0.3s ease-out;
+}
+.larger-screen-container svg {
+  fill: #fff;
+  width: calc(80px + 2vw);
+  margin: 1rem;
+  z-index: 0;
+}
+.larger-screen-container svg:nth-child(1) {
+  transform: rotate(20deg);
+}
+.larger-screen-container svg:nth-child(2) {
+  transform: rotate(-20deg);
+}
+.larger-screen-container svg:nth-child(3) {
+  transform: rotate(20deg);
+}
+
+/*
+for the container of the information to be retrieved through API request
+  - grid to span the container for one column, the second of the defined two
+  - background-color just to test the layout visually
+
+  - display flex to make the column a flex container
+  - justify-content and align-items to align the content in the row and in the column
+*/
+.information-container {
+  grid-column: 2/3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
+}
+/*
+for the unordered lists in the information container
+  - list style none to remove default bullet points
+*/
+.information-container ul {
+  list-style: none;
+}
+.information-display {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  text-align: center;
+  background-color: rgba(255,255,255,0.2);
+  font-size: 22;
+  border: 15px double #fff;
+}
+.information-display .header-display {
+  text-transform: uppercase;
+  font-size: calc(2.2rem + 0.5vw);
+  text-shadow: -2px 2px 0 #10CC72;
+}
+.information-display .horizontal-submenu {
+  display: flex;
+  margin-bottom: 1rem;
+}
+.information-display .horizontal-submenu li {
+  flex-grow: 1;
+  text-transform: capitalize;
+  margin: 0.5rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  background-color: rgba(255,255,255,0.2);
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease-out;
+  transition-delay: 0.2s;
+}
+.information-display .horizontal-submenu li:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #fff;
+  z-index: -1;
+  transition: all 0.3s ease-out;
+}
+.information-display .horizontal-submenu li:hover:before {
+  width: 100%;
+  height: 100%;
+}
+.information-display .horizontal-submenu li:hover {
+  color: #473277;
+}
+.information-display .vertical-list-of-streams li {
+  display: flex;
+  align-items: center;
+  margin: 0.3rem;
+}
+.information-display .vertical-list-of-streams li p img {
+  width: 54px;
+  height: auto;
+  border-radius: 50%;
+  opacity: 0.5;
+  transition: opacity 0.3s ease-out;
+}
+.information-display .vertical-list-of-streams li p img:hover {
+  opacity: 0.67;
+}
+.information-display .vertical-list-of-streams li p:nth-child(2){
+  flex-grow: 1;
+  margin: 0.5rem;
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+.streaming-live{
+  animation: streaming-live 0.6s 7 ease-out alternate forwards;
+}
+
+.information-display .vertical-list-of-streams li p a{
+  text-decoration: none;
+  color: inherit;
+}
+
+
+@keyframes streaming-live {
+  0% {
+    color: rgba(255,255,255,1);
+  }
+  100% {
+    color: #10CC72;
+  }
+}
+
+
+/*
+for screen smaller than 800px
+*/
+@media only screen and (max-width: 800px) {
+  /*
+  for the purely aesthetical container
+    - display none to hide it
+  */
+  .larger-screen-container {
+    display: none;
+  }
+  /*
+  for the useful container
+    - grid to span the container for two columns,
+    covering the entirety of the viewport
+  */
+  .information-container {
+    grid-column: 1/3;
+  }
+}
+
+@media only screen and (max-height: 480px) {
+  .svg-icons {
+    opacity: 0;
+  }
+}
